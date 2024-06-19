@@ -1,1 +1,12 @@
+# Compiler files
+cache/
+out/
+
+# Ignores all broadcast files
+broadcast/
+
+# Docs
+docs/
+
+# Dotenv file
 .env

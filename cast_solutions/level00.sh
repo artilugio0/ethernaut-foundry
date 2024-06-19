@@ -11,6 +11,7 @@ then
 	echo "Enter private key"
 	read -s "PRIVATE_KEY"
 fi
+PRIVATE_KEY=$(echo $PRIVATE_KEY | sed 's/^0x//')
 
 OUTPUT=$(cast call ${CONTRACT} "$(cast sig 'info()')")
 cast to-ascii $OUTPUT
