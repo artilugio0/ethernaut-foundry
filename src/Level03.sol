@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {Test, console} from "forge-std/Test.sol";
-
 contract CoinFlip {
     uint256 public consecutiveWins;
     uint256 lastHash;
@@ -14,7 +12,6 @@ contract CoinFlip {
 
     function flip(bool _guess) public returns (bool) {
         uint256 blockValue = uint256(blockhash(block.number - 1));
-        console.log(lastHash, blockValue);
 
         if (lastHash == blockValue) {
             revert();
