@@ -22,7 +22,7 @@ contract Level20 is Test {
         vm.stopPrank();
 
         vm.expectRevert();
-        target.withdraw();
+        target.withdraw{gas:1000000}();
     }
 
     function exploit(address _target) private {
